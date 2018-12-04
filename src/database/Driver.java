@@ -2,12 +2,16 @@ package database;
 
 import java.sql.*;
 
+import Main.Communicate;
+import Main.Main;
+
 /**
  * Enables connection to the database
  * @author Keenan Gaudio, Louis Johnson, Rae Mcphail
  *
  */
 public class Driver {
+	Main parent;
 	protected Connection conn;
 	protected Statement stmt;
 	public String databaseName = "Project_Database";
@@ -30,8 +34,9 @@ public class Driver {
 	/**
 	 * Constructor for Driver class. Enables the connection to the database.
 	 */
-	public Driver()
+	public Driver(Main parent)
 	{
+		this.parent = parent;
 		int MAXATTEMPS = 5;
 		int attempts = 0;
 		while(attempts <=MAXATTEMPS) {
@@ -53,6 +58,12 @@ public class Driver {
 		}
 		
 	}	
+	
+	
+	public void addUser(String name, String pass, String mail, boolean curFlag){
+		System.out.println("got values to add: " + name + ", " + pass + ", " + mail + (curFlag?", cur":", std"));
+		//query stuff
+	}
 }
 
 
