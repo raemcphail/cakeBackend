@@ -48,7 +48,7 @@ public interface Communicate {
 		static final int DISCONNECT				= 0x0004;
 		
 		// GET_USER_THINGS							01
-		static final int GET_USER_DEPENDANTS	= 0x0103;
+		static final int GET_USER_DEPENDANTS	= 0x0130;
 		static final int GET_USER_INGREDIENT	= 0x0102;
 		static final int GET_USER_RECIPES		= 0x0103;
 		static final int GET_USER_MEALS			= 0x0104;
