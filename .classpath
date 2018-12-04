@@ -7,5 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="/Users/keenangaudio/Documents/School/CPSC471/include/mysql-connector-java-5.1.47.jar"/>
+	<classpathentry kind="lib" path="/Users/keenangaudio/flutter/bin/cache/artifacts/engine/android-x86/flutter.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
