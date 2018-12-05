@@ -1,6 +1,6 @@
 package database;
 
-public class DatabaseConstants {
+public interface DBConstants {
     String ALLERGY_TABLE                =  "`ALLERGY`";
 
     String CHANNEL_TABLE                =  "`CHANNEL`";

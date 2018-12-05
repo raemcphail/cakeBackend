@@ -6,8 +6,11 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import dataTypes.Ingredient;
+import dataTypes.Recipe;
 import database.Driver;
-import database.DatabaseConstants;
+import database.DBConstants;
 
 public class Connector {
 	
@@ -50,7 +53,7 @@ public class Connector {
 		 * creates database
 		 */
 		void startDB() {
-			db = new Driver(null);
+			db = new Driver();
 		}
 
 		/**
@@ -71,21 +74,22 @@ public class Connector {
 				// unofficially used for 'vrml-multi-use'
 				Connector c = new Connector(port);
 				System.out.println("The server is " + ((c.running) ? "" : "not ") + "running on port " + port);
-				//c.startDB();
 				
-			// TODO THIS IS JUST FOR TESTING PURPOSES REMOVE THIS LATER DUDES	------------------
-//					serverSide.User steve = new User(Communicate.STUDENT,"hdsaf","ookah","babyDriver@gmail.com",4);
-//					serverSide.User carl = new User(Communicate.STUDENT,"hola","poew","killmenow@gmail.com",5);
-//							// for some reason he doesn't show up when we search for him
-//					try {
-//						c.db.addUser(steve, "poop");
-//						c.db.addUser(carl, "poop");
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					} 
-//					c.db.printTable(0);
-			// --------------------------------------------------------------------------------
+				c.startDB();
+				//c.db.addUser("Keenan", "iLoveSunny", "funny@me.com", false);
 				
+//				String rName, String rIngredients, int rTime, String creator, float rating, String instructions
+				///*
+				c.db.addIngredient(new Ingredient("bread", 1));
+				c.db.addIngredient(new Ingredient("cheese", 2));
+				c.db.addIngredient(new Ingredient("butter", 4));
+				
+				c.db.addRecipe(new Recipe("grilled cheese", "bread,2,slices:cheese,1,slice:butter,1,dollup", 5, "Keenan", 5, 
+						"cheese goes on bread, butter each side of bread, place in pan and fry until cheese melts and bread gets crispy"));
+				System.out.println("INVALID: " + Communicate.INVALID);
+				System.out.println("success: "+c.db.login("happy_dude123", "password123"));
+				System.out.println("fail: 	 "+c.db.login("happy_dude127", "password123"));
+				System.out.println("fail: 	 "+c.db.login("happy_dude123", "password126"));	//	*/
 				c.accept();
 
 			} catch (NumberFormatException e) {
