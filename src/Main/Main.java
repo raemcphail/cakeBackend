@@ -1,7 +1,7 @@
 package Main;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,14 +10,15 @@ import java.nio.ByteBuffer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import dataTypes.Recipe;
 import io.flutter.plugin.common.StringCodec;
 
 import database.Driver;
 
 public class Main implements Runnable{
 	//handles individual connections
-	DataInputStream in;
-	DataOutputStream out;
+	ObjectInputStream in;
+	ObjectOutputStream out;
 	boolean exit = false;
 	int clientType;
 	Driver db;
@@ -26,15 +27,14 @@ public class Main implements Runnable{
 		clientType = 0; // not a valid type
 		try {
 			// write connected
-			out = new DataOutputStream(out_);
-			//out.writeInt(Communicate.CONNECTED);
-			//out.flush();
+			out = new ObjectOutputStream(out_);
+			out.writeInt(Communicate.CONNECTED);
+			out.flush();
 
 			System.out.println("Got wrote mate");
 
 			// wait for response
-			in = new DataInputStream(in_);
-			System.out.println("Got:  " + readString());
+			in = new ObjectInputStream(in_);
 			
 			System.out.println("Got input stream, waiting for input int");
 			// check if response is what we're expecting
@@ -43,7 +43,7 @@ public class Main implements Runnable{
 			System.out.println("Connection to client established.\n" + "server instance running on "
 					+ Thread.currentThread().getName());
 
-			db = new Driver(this);
+			db = new Driver();
 			
 		} catch (IOException e) {
 			System.err.println("something happened: " + e.getLocalizedMessage() + " : " + e.getMessage());
@@ -59,7 +59,7 @@ public class Main implements Runnable{
 		try {
 			while (!exit) {
 				int tag = in.readInt();	//0x0000ffff 
-				//System.err.println("Got command: " + tag);
+				System.err.println("Got command: " + Integer.toHexString(tag) );
 				try {
 					executeCommand( tag );
 				} catch (Exception e) { e.printStackTrace(); }
@@ -77,22 +77,23 @@ public class Main implements Runnable{
 				disconnect();
 				break;
 			case Communicate.ADD_ANY_USER:
-				String name = readString();
-				String pass = readString();
-				String mail = readString();
-				boolean cur = in.readBoolean();	//yikes maybe not
+				String name = in.readUTF();
+				String pass = in.readUTF();
+				String mail = in.readUTF();
+				boolean cur = in.readBoolean();	
 				db.addUser(name, pass, mail, cur);
+				break;
+			case Communicate.ADD_RECIPES:
+				String rName = in.readUTF();
+				String rIngredients = in.readUTF();
+				int rTime = in.readInt();
+				String creator = in.readUTF();	
+				float rating = in.readFloat();
+				String instr = in.readUTF();	
+				db.addRecipe( new Recipe(0, rName, rIngredients, rTime, creator, rating, instr) );
 		}
 	}	
-	private String readString() throws IOException {
-		String out = "";
-		char next = in.readChar();	//maybe do bytes
-		while (next != '\0') {
-			out += next;
-			next = in.readChar();
-		}
-		return out;
-	}
+	
 	private void disconnect() {
 		exit = true;
 	}
